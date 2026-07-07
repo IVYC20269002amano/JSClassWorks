@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>パスワードジェネレーター</title>
+  </head>
+  <body>
+    <section>
+      <h2>パスワード生成器</h2>
+      <div
+        id="result"
+        style="font-size: 24px; font-family: monospace; margin-bottom: 10px"
+      >
+        ここに結果が出ます
+      </div>
+      <button id="genBtn">32文字生成</button>
+      <input type="range" id="passRange" min="4" max="64" />
+      <input type="checkbox" name="" id="hasLower" checked />
+      <label for="hasLower">a~zの小文字を含める</label>
+      <input type="checkbox" name="" id="hasDigit" checked />
+      <label for="hasDigit">0~9の数字を含める</label>
+      <input type="checkbox" name="" id="hasSymbol" checked />
+      <label for="hasSymbol">記号を含める</label>
+    </section>
+
+    <section>
+      <p><a href="./index.html">トップへ戻る</a></p>
+    </section>
+
+    <script src="./JS/passGen.js"></script>
+  </body>
+</html>

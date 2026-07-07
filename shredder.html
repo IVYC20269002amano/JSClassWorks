@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ファイルシュレッダー</title>
+    <style>
+      #result {
+        font-size: 24px;
+        font-family: monospace;
+      }
+
+      section {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ファイルシュレッダー（開発中）</h1>
+    <p>
+      復元出来ないようにファイルを破棄するシュレッダーです。<br />
+      消去したいファイルを選択して下さい。<br />
+      実行ボタンを押すと自動でダウンロードが開始するので、<br />
+      それを元の同名ファイルに上書きして下さい。
+    </p>
+    <section>
+      <div id="result"></div>
+      <input type="file" name="" id="targetFile" />
+      <label for="targetFile">◀ファイルを選択して下さい</label>
+    </section>
+    <section>
+      <button id="shredBtn">シュレッダー実行</button>
+    </section>
+    <section>
+      <p><a href="./index.html">トップへ戻る</a></p>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // ページを更新した時に初期化する（今後使う定数を定義する）
+        const targetFile = document.getElementById("targetFile");
+        const shredBtn = document.getElementById("shredBtn");
+
+        // シュレッダー実行ボタンがクリックされた時のイベント
+        shredBtn.addEventListener("click", () => {
+          // INPUTからユーザーが選んだ実際のファイルデータを固定する
+          const file = targetFile.files[0];
+          // インスタンス化
+          const tmpSuperReader = new FileReader();
+
+          // ファイル選択の読込が終わった時のために予約する
+          tmpSuperReader.addEventListener("load", () => {
+            const fileLength = tmpSuperReader.result.byteLength;
+            const inputArrayBuffer = new Uint8Array(tmpSuperReader.result);
+            /*console.log(
+              inputArrayBuffer[0],
+              inputArrayBuffer[1],
+              inputArrayBuffer[2],
+            );*/
+            const randomArray = new Uint8Array(fileLength);
+            window.crypto.getRandomValues(randomArray);
+            for (let i = 0; i < fileLength; i++) {
+              inputArrayBuffer[i] = randomArray[i];
+            }
+            /*console.log(
+              inputArrayBuffer[0],
+              inputArrayBuffer[1],
+              inputArrayBuffer[2],
+            );*/
+            //console.log("バイトの全データを乱数で破壊しました");
+
+            const elememtaryBlob = new Blob([inputArrayBuffer], {
+              type: file.type,
+            });
+
+            const tmpDownloadUrl = URL.createObjectURL(elememtaryBlob);
+            const hiddenLink = document.createElement("a");
+            hiddenLink.href = tmpDownloadUrl;
+            hiddenLink.download = file.name;
+            hiddenLink.click();
+          });
+          tmpSuperReader.readAsArrayBuffer(file);
+        });
+      });
+    </script>
+  </body>
+</html>
