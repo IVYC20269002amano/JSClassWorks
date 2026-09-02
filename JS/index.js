@@ -50,6 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 
+    window.addEventListener("load", () => {
+      ScrollTrigger.refresh();
+    });
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#hero-title-section",
