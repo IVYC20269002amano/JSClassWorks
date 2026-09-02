@@ -3,85 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ゼロトラスト・セキュリティツール集</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        background-color: #1a1a1a;
-        color: #e0e0e0;
-        padding: 2rem;
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      h1 {
-        border-bottom: 2px solid #333;
-        padding-bottom: 0.5rem;
-      }
-      .menu-list {
-        list-style: none;
-        padding: 0;
-      }
-      .menu-item {
-        margin: 1rem 0;
-      }
-      .menu-link {
-        display: block;
-        padding: 1rem;
-        background-color: #2a2a2a;
-        color: #00ff66;
-        text-decoration: none;
-        border-radius: 4px;
-        border: 1px solid #444;
-        transition: background 0.2s;
-      }
-      .menu-link:hover {
-        background-color: #3a3a3a;
-      }
-      .disabled {
-        color: #888;
-        background-color: #222;
-        border: 1px dashed #333;
-        pointer-events: none; /* クリック不可 */
-      }
-    </style>
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Zero-Trust Shield - ポータル</title>
+
+    <!-- フォント設定 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Limelight&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSSの読み込み -->
+    <link rel="stylesheet" href="css/reset-min.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/index.css" />
   </head>
   <body>
-    <h1>🛡️ セキュリティツール・ベース</h1>
-    <p>ブラウザのメモリ内で完結する、ゼロトラスト思想のツール群</p>
+    <div class="app-container">
+      <!-- 1. 最初に大きく表示されるHero領域 -->
+      <section id="hero-title-section">
+        <!-- 「、」で区切って2行に表示 -->
+        <h1 class="hero-title">
+          <span class="hero-line">痕跡を残さない、</span>
+          <span class="hero-line">セキュリティ。</span>
+        </h1>
+      </section>
 
-    <ul class="menu-list">
-      <li class="menu-item">
-        <a href="passGen.html" class="menu-link">🔑 パスワード生成器</a>
-      </li>
+      <!-- 2. スクロールで追従・表示される領域（最初は隠す） -->
+      <div id="main-content-wrapper">
+        <header class="portal-header">
+          <span class="badge">SECURITY BASE</span>
+          <h2 class="sub-header-title">🛡️ セキュリティツール集</h2>
+          <p class="sub-title scramble-text">
+            ブラウザのメモリ内で完結する、ゼロトラスト思想のツール群
+          </p>
+        </header>
 
-      <li class="menu-item">
-        <a href="shredder.html" class="menu-link">🗂️ ファイル・シュレッダー</a>
-      </li>
+        <main>
+          <!-- メニューカードグリッド -->
+          <div class="menu-grid">
+            <a href="passGen02.html" class="card-item">
+              <div class="card-icon">🔑</div>
+              <div class="card-title">パスワード生成器</div>
+              <div class="card-desc">安全な乱数パスワードを瞬時に生成</div>
+            </a>
 
-      <li class="menu-item">
-        <a href="./encryptShield.html" class="menu-link"
-          >🔒 ファイル事前暗号化シールド（未実装）</a
-        >
-      </li>
-      <li class="menu-item">
-        <a href="./malware_lab_pra.html" class="menu-link">
-          🏢シークレットラボ🔬（開発中）
-        </a>
-      </li>
-      <li class="menu-item">
-        <a
-          href="
-        ./Template.html"
-          class="menu-link"
-        >
-          テンプレートページ</a
-        >
-      </li>
-    </ul>
-    <footer>
-      <p>
-        このサイトはWeb制作学習の授業課題として制作した非営利のサイトです。作品に関する著作権・商標権等は各権利者に帰属します。
-      </p>
-    </footer>
+            <a href="shredder.html" class="card-item">
+              <div class="card-icon">🗑️</div>
+              <div class="card-title">ファイル・シュレッダー</div>
+              <div class="card-desc">ブラウザ上でデータを回復不能に消去</div>
+            </a>
+
+            <a href="./encryptShield.html" class="card-item">
+              <div class="card-icon">🔒</div>
+              <div class="card-title">合言葉暗号化/復号化</div>
+              <div class="card-desc">テキストをパスフレーズで可逆暗号化</div>
+            </a>
+
+            <a href="./malwareLab.html" class="card-item">
+              <div class="card-icon">🔬</div>
+              <div class="card-title">キーログ計測器</div>
+              <div class="card-desc">キー入力のログとタイピング傾向を計測</div>
+            </a>
+
+            <a href="./fileLock.html" class="card-item">
+              <div class="card-icon">📦</div>
+              <div class="card-title">ファイル暗号化</div>
+              <div class="card-desc">開発中（近日のアップデートで実装）</div>
+            </a>
+
+            <a href="./Template.html" class="card-item">
+              <div class="card-icon">📄</div>
+              <div class="card-title">テンプレート</div>
+              <div class="card-desc">新規ツール作成用のテンプレートベース</div>
+            </a>
+          </div>
+        </main>
+
+        <footer>
+          <p>
+            © 2026 Amano <br />
+            このサイトはWeb制作学習の授業課題として制作した非営利のサイトです。作品に関する著作権・商標権等は各権利者に帰属します。
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <!-- 1. GSAP & ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- 2. Baffle.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/baffle@0.3.5/dist/baffle.min.js"></script>
+
+    <!-- 3. 自作スクリプト -->
+    <script src="js/index.js"></script>
   </body>
 </html>

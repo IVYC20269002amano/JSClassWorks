@@ -1,0 +1,45 @@
+/* ==================================================
+   Mini Reset CSS
+   ================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* サイズ計算のバグを防ぎ直感的に固定 */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased; /* 文字フォントの表示を滑らかに */
+}
+
+img,
+picture,
+video,
+canvas,
+svg,
+iframe {
+  display: block;
+  max-width: 100%; /* 画面外への突き抜けを防止 */
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit; /* 親要素のフォント設定を確実に継承 */
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word; /* 長い暗号文字列などのはみ出しを防ぐ */
+}

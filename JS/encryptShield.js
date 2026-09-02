@@ -15,97 +15,71 @@ document.addEventListener("DOMContentLoaded", () => {
   const decodedConsole = document.getElementById("decoded-console");
   const decCpBtn = document.getElementById("dec-copy-button");
 
-  const dropArea = document.getElementById("drop-zone");
-  const visibleFile = document.getElementById("visible-file");
-  const unvisibleFile = document.getElementById("unvisible-file");
-
+  // --- パスワードマスク制御 ---
   toggleEncMask.addEventListener("change", () => {
     if (toggleEncMask.checked) {
-      inputEncryptArea.setAttribute("aria-checked", true);
+      inputEncryptArea.setAttribute("aria-checked", "true");
     } else {
-      inputEncryptArea.setAttribute("aria-checked", false);
+      inputEncryptArea.setAttribute("aria-checked", "false");
     }
   });
 
+  toggleDecMask.addEventListener("change", () => {
+    if (toggleDecMask.checked) {
+      inputDecodeArea.setAttribute("aria-checked", "true");
+    } else {
+      inputDecodeArea.setAttribute("aria-checked", "false");
+    }
+  });
+
+  // --- テキストの暗号化（Base64化） ---
   encryptBtn.addEventListener("click", () => {
-    //Startボタンを押すと、元の合言葉をbase64でencodeする
     const secretStr = inputEncryptArea.value;
-    //console.log(secretStr);
     const utf8Str = new TextEncoder().encode(secretStr);
     const binaryStr = String.fromCodePoint(...utf8Str);
     const encodedStr = btoa(binaryStr);
     encodedConsole.innerHTML = encodedStr;
   });
 
+  // --- テキストの復号化（Base64解除） ---
+  decodeBtn.addEventListener("click", () => {
+    const encodedStr = inputDecodeArea.value.trim();
+    if (!encodedStr) {
+      decodedConsole.textContent = "復号化するデータが入力されていません。";
+      return;
+    }
+
+    try {
+      // 構成Aはテキスト専用のため、単純にBase64をデコードして文字列に戻します
+      const binaryStr = atob(encodedStr);
+      const utf8Str = Uint8Array.from(binaryStr, (char) => char.charCodeAt(0));
+      const decodedStr = new TextDecoder().decode(utf8Str);
+      decodedConsole.innerHTML = decodedStr;
+    } catch (err) {
+      decodedConsole.textContent =
+        "復号化に失敗しました。正しい暗号データを入力してください。";
+      console.error(err);
+    }
+  });
+
+  // --- コピーボタンの動作 ---
   encCpBtn.addEventListener("click", async () => {
     try {
       const clipLog = encodedConsole.innerHTML;
       await navigator.clipboard.writeText(clipLog);
-      encodedConsole.innerHTML = "";
       encodedConsole.innerHTML = "ClipBoardにCopy完了！";
-      //console.log(encodedConsole.innerHTML);
     } catch (err) {
       console.error("Copy失敗！");
     }
-  });
-
-  toggleDecMask.addEventListener("change", () => {
-    if (toggleDecMask.checked) {
-      inputDecodeArea.setAttribute("aria-checked", true);
-    } else {
-      inputDecodeArea.setAttribute("aria-checked", false);
-    }
-  });
-
-  decodeBtn.addEventListener("click", () => {
-    //Startボタンを押すと、元の合言葉に復号化する
-    const encodedStr = inputDecodeArea.value;
-    const binaryStr = atob(encodedStr);
-    const utf8Str = Uint8Array.from(binaryStr, (char) => char.charCodeAt(0));
-    const decodedStr = new TextDecoder().decode(utf8Str);
-    decodedConsole.innerHTML = decodedStr;
   });
 
   decCpBtn.addEventListener("click", async () => {
     try {
       const clipLog = decodedConsole.innerHTML;
       await navigator.clipboard.writeText(clipLog);
-      decodedConsole.innerHTML = "";
       decodedConsole.innerHTML = "ClipBoardにCopy完了！";
-      //console.log(encodedConsole.innerHTML);
     } catch (err) {
       console.error("Copy失敗！");
-    }
-  });
-
-  dropArea.addEventListener("dragover", (event) => {
-    event.preventDefault();
-
-    dropArea.classList.add("is-active");
-  });
-
-  dropArea.addEventListener("dragleave", (event) => {
-    dropArea.classList.remove("is-active");
-  });
-
-  dropArea.addEventListener("drop", (event) => {
-    event.preventDefault();
-    dropArea.classList.remove("is-active");
-
-    const file = event.dataTransfer.files[0];
-    if (!file) return;
-    const fileUrl = URL.createObjectURL(file);
-
-    if (file.type === ("image/*" || "video/*")) {
-      visibleFile.src = fileUrl;
-      unvisibleFile.classList.add("is-hidden");
-      const pElement = dropArea.querySelector("p");
-      pElement.textContent = "ファイルを暗号化中...";
-    } else {
-      unvisibleFile.href = fileUrl;
-      visibleFile.classList.add("is-hidden");
-      const pElement = dropArea.querySelector("p:last-of-type");
-      pElement.textContent = "ファイルを暗号化中...";
     }
   });
 });

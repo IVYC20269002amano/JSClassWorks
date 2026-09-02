@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Zero-Trust Shield - FileLock</title>
+
+    <!-- フォント設定 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSSの読み込み -->
+    <link rel="stylesheet" href="css/reset-min.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/fileLock.css" />
+  </head>
+  <body>
+    <!-- ヘッダー -->
+    <header class="page-header">
+      <span class="badge">SECURITY TOOL</span>
+      <h1>ファイル暗号化・ロック</h1>
+    </header>
+
+    <main class="app-container">
+      <!-- 1. ファイルロック・設定フォーム -->
+      <section class="card">
+        <h2 class="card-title">🔒 ファイルロック・設定フォーム</h2>
+
+        <div class="field-group">
+          <label for="input-passwd-area" class="field-label">
+            ※ロック用合言葉を入力して下さい
+          </label>
+          <textarea
+            name="input-passwd-area"
+            id="input-passwd-area"
+            rows="2"
+            class="textarea-field"
+            placeholder="ロック用の合言葉を入力して下さい"
+            maxlength="64"
+            minlength="4"
+            required
+          ></textarea>
+        </div>
+
+        <div class="control-row">
+          <label class="checkbox-label" for="toggle-enc-mask">
+            <input type="checkbox" id="toggle-enc-mask" checked />
+            <span class="custom-checkbox"></span>
+            <span class="label-text">表示を隠す</span>
+          </label>
+        </div>
+
+        <!-- ロック用ファイルドロップエリア -->
+        <div class="field-group" style="margin-top: 20px">
+          <label class="field-label">ロックしたいファイルをドロップ</label>
+          <div id="drop-zone" class="drop-console-area">
+            <h3 id="drop-title">ここにファイルをドロップ</h3>
+            <p id="drop-hint" class="drop-hint">
+              またはクリックしてファイルを選択
+            </p>
+            <input type="file" id="file-input" style="display: none" />
+
+            <!-- ロック完了時のダウンロードエリア -->
+            <div id="drop-zone-container" class="is-hidden">
+              <a
+                id="locked-file-download"
+                class="download-link"
+                href=""
+                download=""
+              >
+                🔒 ロック済みファイル(.locked)を保存
+              </a>
+              <button type="button" id="reset-enc-btn" class="btn btn-reset">
+                ✕ ファイルを外してやり直す
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. シールド作動ログ -->
+      <section class="card">
+        <h2 class="card-title">📡 シールド作動ログ</h2>
+        <div class="console-area" id="encoded-console"></div>
+        <button type="button" id="enc-copy-button" class="btn btn-secondary">
+          📋 クリップボードCopy
+        </button>
+      </section>
+
+      <!-- 3. ファイルロック・解除フォーム -->
+      <section class="card">
+        <h2 class="card-title">🔓 ファイルロック・解除フォーム</h2>
+
+        <div class="field-group">
+          <label for="input-decode-area" class="field-label">
+            ※解除用合言葉を入力して下さい
+          </label>
+          <textarea
+            name="input-decode-area"
+            id="input-decode-area"
+            rows="2"
+            class="textarea-field"
+            placeholder="解除用の合言葉を入力して下さい"
+            maxlength="64"
+            minlength="4"
+            required
+          ></textarea>
+        </div>
+
+        <div class="control-row">
+          <label class="checkbox-label" for="toggle-dec-mask">
+            <input type="checkbox" id="toggle-dec-mask" checked />
+            <span class="custom-checkbox"></span>
+            <span class="label-text">表示を隠す</span>
+          </label>
+        </div>
+
+        <!-- 解除用ファイルドロップエリア -->
+        <div class="field-group" style="margin-top: 20px">
+          <label class="field-label"
+            >解除したい .locked ファイルをドロップ</label
+          >
+          <div id="decode-drop-zone" class="drop-console-area">
+            <h3 id="decode-drop-title">.locked ファイルをドロップ</h3>
+            <p id="decode-drop-hint" class="drop-hint">
+              またはクリックして選択
+            </p>
+            <input
+              type="file"
+              id="decode-file-input"
+              accept=".locked"
+              style="display: none"
+            />
+
+            <!-- 解除完了時のダウンロードエリア -->
+            <div id="decode-zone-container" class="is-hidden">
+              <a
+                id="unlocked-file-download"
+                class="download-link"
+                href=""
+                download=""
+              >
+                💾 復号化ファイルを保存
+              </a>
+              <button type="button" id="reset-dec-btn" class="btn btn-reset">
+                ✕ ファイルを外してやり直す
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. シールド解除ログ -->
+      <section class="card">
+        <h2 class="card-title">📊 シールド解除ログ</h2>
+        <div class="console-area" id="decoded-console"></div>
+        <button type="button" id="dec-copy-button" class="btn btn-secondary">
+          📋 クリップボードCopy
+        </button>
+      </section>
+
+      <!-- 通知トースト -->
+      <div id="copyNotice" class="copy-notice" aria-live="polite"></div>
+
+      <!-- ナビゲーション -->
+      <nav class="nav-footer">
+        <a href="./index.html" class="nav-link">← トップページへ戻る</a>
+      </nav>
+    </main>
+
+    <footer>
+      <p>
+        © 2026 Amano <br />
+        このサイトはWeb制作学習の授業課題として制作した非営利のサイトです。作品に関する著作権・商標権等は各権利者に帰属します。
+      </p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/baffle@0.3.5/dist/baffle.min.js"></script>
+    <script src="./js/shuffle.js"></script>
+    <script src="./JS/fileLock.js"></script>
+  </body>
+</html>

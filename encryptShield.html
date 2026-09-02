@@ -3,249 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zero-Trust Shield Lab</title>
-    <style>
-      /* ダークモード UI スキニング */
-      :root {
-        --bg-color: #0d1117;
-        --card-bg: #161b22;
-        --border-color: #30363d;
-        --text-color: #c9d1d9;
-        --accent-color: #58a6ff;
-        --success-color: #238636;
-      }
-      body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-family: "Courier New", Courier, monospace;
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      main {
-        width: 100%;
-        max-width: 600px;
-      }
-      .card {
-        background-color: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 20px;
-        margin-bottom: 20px;
-      }
-      h2 {
-        margin-top: 0;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 8px;
-        font-size: 1.2rem;
-      }
-      textarea {
-        width: 100%;
-        background-color: var(--bg-color);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
-        padding: 10px;
-        box-sizing: border-box;
-        border-radius: 4px;
-        font-family: inherit;
-        resize: vertical;
-      }
-      .btn {
-        background-color: var(--success-color);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: inherit;
-        margin-top: 10px;
-        width: 100%;
-        font-weight: bold;
-        font-size: 1.2em;
-      }
-      .btn:hover {
-        opacity: 0.9;
-      }
-      .console-area {
-        background-color: #000;
-        border: 1px solid var(--border-color);
-        color: #39ff14; /* ターミナルグリーン */
-        padding: 15px;
-        font-family: monospace;
-        min-height: 100px;
-        white-space: pre-wrap;
-        border-radius: 4px;
-      }
-      .menu-list {
-        list-style: none;
-        padding: 0;
-      }
-      .menu-item {
-        margin: 1rem 0;
-      }
-      .menu-link {
-        display: block;
-        padding: 1rem;
-        background-color: #2a2a2a;
-        color: #00ff66;
-        text-decoration: none;
-        border-radius: 4px;
-        border: 1px solid #444;
-        transition: background 0.2s;
-      }
-      .menu-link:hover {
-        background-color: #3a3a3a;
-      }
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Zero-Trust Shield - 暗号化・復号化ツール</title>
 
-      /*このページのみのスタイル*/
+    <!-- フォント設定 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"
+      rel="stylesheet"
+    />
 
-      #input-passwd-area[aria-checked="true"] {
-        -webkit-text-security: disc;
-      }
-      #input-passwd-area[aria-checked="false"] {
-        -webkit-text-security: none;
-      }
-
-      #drop-zone {
-        display: flex;
-        flex-direction: column;
-        margin: 0;
-        padding-top: 0;
-      }
-
-      #drop-zone p {
-        padding: 0 auto 0;
-        margin: 10px auto 10px;
-      }
-
-      #visible-file {
-        display: block;
-        width: auto;
-        height: 40px;
-        border: 1px solid #39ff14;
-      }
-
-      #unvisible-file {
-        display: block;
-        width: auto;
-        height: 120px;
-        border: 2px dashed #58a6ff;
-        text-align: center;
-      }
-    </style>
+    <!-- CSSの読み込み -->
+    <link rel="stylesheet" href="css/reset-min.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/encryptShield.css" />
   </head>
   <body>
-    <main>
-      <div class="card">
-        <h2>シールド・入力フォーム</h2>
+    <!-- ヘッダー（中央配置） -->
+    <header class="page-header">
+      <span class="badge">SECURITY TOOL</span>
+      <h1>テキスト暗号化・復号化</h1>
+    </header>
 
-        <!-- 1. 「秘密の合言葉」入力エリア -->
-        <label for="input-passwd-area"
-          >※必ず元のPassを保存して下さい<br
-        /></label>
-        <textarea
-          name="input-passwd-area"
-          id="input-passwd-area"
-          rows="3"
-          cols="22"
-          placeholder="秘密の合言葉を入力して下さい"
-          maxlength="64"
-          minlength="4"
-          required
-        ></textarea>
-        <label for="toggle-enc-mask">
-          <input
-            type="checkbox"
-            name="toggle-enc-mask"
-            id="toggle-enc-mask"
-            checked
-          />
-          表示を隠す
-        </label>
-        <!-- クリップボードCopyボタンを配置 -->
-        <button type="button" id="encrypt-button" class="btn">
-          暗号化Start
-        </button>
-      </div>
+    <main class="app-container">
+      <!-- 1. 暗号化セクション -->
+      <section class="card">
+        <h2 class="card-title">🔒 シールド・暗号化フォーム</h2>
 
-      <!-- ログ出力用コンソール -->
-      <div class="card">
-        <h2>シールド作動ログ</h2>
-        <div class="console-area" id="encoded-console"></div>
-        <button type="button" id="enc-copy-button" class="btn">
-          クリップボードCopy
-        </button>
-      </div>
-
-      <!-- ファイル暗号化用ドロップエリア -->
-      <div class="card">
-        <h2>ファイル暗号化フォーム</h2>
-        <div id="drop-zone" class="console-area">
-          <p>ビューアで見られるファイルをドロップ</p>
-          <iframe id="visible-file" class="console-area" src=""> </iframe>
-          <p>それ以外のファイルはこちら</p>
-          <a id="unvisible-file" href="" download=""></a>
+        <div class="field-group">
+          <label for="input-passwd-area" class="field-label">
+            ※必ず元の平文テキストを各自で保管してください
+          </label>
+          <textarea
+            name="input-passwd-area"
+            id="input-passwd-area"
+            rows="3"
+            class="textarea-field"
+            placeholder="秘密のメッセージやパスワードを入力..."
+            maxlength="256"
+            minlength="4"
+            required
+          ></textarea>
         </div>
-      </div>
 
-      <!-- 元のパス出力用  -->
-      <div class="card">
-        <h2>シールド・解除フォーム</h2>
+        <div class="control-row">
+          <label class="checkbox-label" for="toggle-enc-mask">
+            <input type="checkbox" id="toggle-enc-mask" checked />
+            <span class="custom-checkbox"></span>
+            <span class="label-text">表示を伏せ字（マスク）にする</span>
+          </label>
+        </div>
 
-        <textarea
-          name="input-decode-area"
-          id="input-decode-area"
-          rows="3"
-          cols="22"
-          placeholder="秘密の暗号キーを入力して下さい"
-          maxlength="64"
-          minlength="4"
-          required
-        ></textarea>
-        <label for="toggle-dec-mask">
-          <input
-            type="checkbox"
-            name="toggle-dec-mask"
-            id="toggle-dec-mask"
-            checked
-          />
-          表示を隠す
-        </label>
-        <button type="button" id="decode-button" class="btn">
-          復号化Start
+        <button type="button" id="encrypt-button" class="btn btn-primary">
+          ⚡ 暗号化 Start
         </button>
-      </div>
 
-      <!-- ログ出力用コンソール -->
-      <div class="card">
-        <h2>シールド解除ログ</h2>
-        <div class="console-area" id="decoded-console"></div>
-        <button type="button" id="dec-copy-button" class="btn">
-          クリップボードCopy
+        <!-- 暗号化ログ領域 -->
+        <div class="result-section">
+          <h3 class="sub-heading">📡 暗号化出力ログ</h3>
+          <div class="console-box" id="encoded-console"></div>
+          <button type="button" id="enc-copy-button" class="btn btn-secondary">
+            📋 クリップボードへコピー
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. 復号化セクション -->
+      <section class="card">
+        <h2 class="card-title">🔓 シールド・復号化フォーム</h2>
+
+        <div class="field-group">
+          <label for="input-decode-area" class="field-label">
+            復号化したいBase64暗号文字列を入力してください
+          </label>
+          <textarea
+            name="input-decode-area"
+            id="input-decode-area"
+            rows="3"
+            class="textarea-field"
+            placeholder="暗号データをここに貼り付け..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="control-row">
+          <label class="checkbox-label" for="toggle-dec-mask">
+            <input type="checkbox" id="toggle-dec-mask" checked />
+            <span class="custom-checkbox"></span>
+            <span class="label-text">表示を伏せ字（マスク）にする</span>
+          </label>
+        </div>
+
+        <button type="button" id="decode-button" class="btn btn-primary">
+          🔓 復号化 Start
         </button>
-      </div>
 
-      <!-- トップへ戻るリンクボタン -->
-      <div>
-        <ul class="menu-list">
-          <li class="menu-item">
-            <a href="./index.html" class="menu-link">トップページへ</a>
-          </li>
-        </ul>
-      </div>
+        <!-- 復号化ログ領域 -->
+        <div class="result-section">
+          <h3 class="sub-heading">📊 復号化結果ログ</h3>
+          <div class="console-box" id="decoded-console"></div>
+          <button type="button" id="dec-copy-button" class="btn btn-secondary">
+            📋 クリップボードへコピー
+          </button>
+        </div>
+      </section>
+
+      <!-- 共通通知エリア -->
+      <div id="copyNotice" class="copy-notice" aria-live="polite"></div>
+
+      <!-- ナビゲーション -->
+      <nav class="nav-footer">
+        <a href="./index.html" class="nav-link">← トップページへ戻る</a>
+      </nav>
     </main>
+
     <footer>
       <p>
-        このサイトはWeb制作学習の授業課題として制作した非営利のサイトです。作品に関する著作権・商標権等は各権利者に帰属します。
+        © 2026 Amano <br />
+        このサイトはWeb制作学習の授業課題として制作した非営利のサイトです。
       </p>
     </footer>
-
-    <script src="./JS/encryptShield.js">
-      // ─── ここから下は、完全にあなたの独占領域です ───
-      // ボタンの検知、文字の取得、Javaの罠のない快適な条件分岐……
-      // あなたのロジックを、思う存分タイピングしてください！
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/baffle@0.3.5/dist/baffle.min.js"></script>
+    <script src="./js/shuffle.js"></script>
+    <script src="./JS/encryptShield.js"></script>
   </body>
 </html>

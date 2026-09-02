@@ -1,0 +1,24 @@
+body {
+  color: #caf0f8;
+  min-height: 100vh;
+  background-color: #0096c7;
+
+  background-image: linear-gradient(to bottom, transparent, #03045e);
+  background-size: 100% 50%;
+  background-position: bottom;
+  background-repeat: no-repeat;
+
+  background-attachment: fixed;
+}
+
+.nav-footer a {
+  color: aliceblue;
+}
+
+.nav-footer a:hover {
+  color: aqua;
+}
+
+footer p {
+  color: aliceblue;
+}
