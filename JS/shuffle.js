@@ -1,5 +1,5 @@
 /**
- * Zero-Trust Shield - 全要素・placeholder対応 安全版シャッフル演出
+ * Zero-Trust Shield - 全要素・placeholder対応 安全版シャッフル演出（フォーム除外版）
  */
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof baffle === "undefined") return;
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return chars[Math.floor(Math.random() * chars.length)];
   };
 
-  // ★ご指定のパラメータに設定
+  // ★パラメータ設定
   const CHAR_POOL = "█▓▒░/\\=+#*:<>{}" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const DURATION = 900; // シャッフル演出時間（0.9秒）
   const SPEED = 25; // 文字切り替え速度（25ミリ秒の高速スロット）
@@ -43,16 +43,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const elements = document.querySelectorAll(selector);
 
   elements.forEach((element) => {
-    // 【バグ防止 1】子要素にHTMLタグ（buttonやinput等）を持っているdiv等は除外[cite: 16, 17, 18, 21]
+    const tagName = element.tagName.toLowerCase();
+
+    // 【除外ガード 1】フォームコントロール関連タグ、スクリプト、スタイルは除外
+    if (
+      ["script", "style", "input", "select", "textarea", "option"].includes(
+        tagName,
+      )
+    ) {
+      return;
+    }
+
+    // 【除外ガード 2】フォーム・スライダー・動的表示エリア内の要素を除外
+    if (
+      element.closest("input, select, textarea") ||
+      element.classList.contains("range-value") ||
+      element.classList.contains("range-slider") ||
+      element.closest(".slider-item, .control-item, .controls-group")
+    ) {
+      return;
+    }
+
+    // 【バグ防止 1】子要素にHTMLタグ（buttonやinput等）を持っているdiv等は除外
     if (element.children.length > 0) return;
 
-    // 【バグ防止 2】テキストが空、または空白のみの要素はスキップ[cite: 16, 17, 18, 21]
+    // 【バグ防止 2】テキストが空、または空白のみの要素はスキップ
     const text = element.textContent.trim();
     if (!text) return;
-
-    // 【バグ防止 3】scriptやstyleタグはスキップ
-    const tagName = element.tagName.toLowerCase();
-    if (tagName === "script" || tagName === "style") return;
 
     // Baffleの適用
     const b = baffle(element, {
@@ -76,7 +93,16 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   inputsWithPlaceholder.forEach((input) => {
-    const originalPlaceholder = input.getAttribute("placeholder"); //[cite: 16, 17, 18, 21]
+    // スライダー（range）などの特殊なinputはplaceholderシャッフルからも除外
+    if (
+      input.type === "range" ||
+      input.type === "checkbox" ||
+      input.type === "radio"
+    ) {
+      return;
+    }
+
+    const originalPlaceholder = input.getAttribute("placeholder");
     if (!originalPlaceholder) return;
 
     const length = originalPlaceholder.length;
