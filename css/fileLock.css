@@ -8,37 +8,49 @@
 }
 
 :root {
+  /* カラーパレット */
+  --bg-base: #03045e;
+  --bg-gradient-end: #48cae4;
   --accent-cyan: #00b4d8;
   --accent-blue: #90e0ef;
   --text-main: #caf0f8;
   --text-muted: rgba(144, 224, 239, 0.5);
 
+  /* カード・ガラスモフィズム */
   --card-bg: rgba(2, 62, 138, 0.25);
   --card-border: rgba(144, 224, 239, 0.15);
   --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   --console-bg: rgba(0, 0, 0, 0.45);
 
+  /* フォント */
   --font-mono: "美咲ゴシック第2", "DotGothic16", monospace;
 }
 
+/* 画面全体の基本背景 */
 body {
+  color: var(--text-main);
   font-family: var(--font-mono);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
+  min-height: 100vh;
+  background-color: var(--bg-base);
 
   background-image: linear-gradient(
     to bottom,
-    var(--bg-base),
+    transparent,
     var(--bg-gradient-end)
   );
-  background-size: 100% 100%;
-  background-position: center;
+  background-size: 100% 50%;
+  background-position: bottom;
   background-repeat: no-repeat;
   background-attachment: fixed;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
 }
 
+/* レイアウトコンテナ */
 .app-container {
   width: 100%;
   max-width: 580px;
@@ -65,7 +77,9 @@ body {
 .page-header h1 {
   font-size: 1.6rem;
   font-weight: 700;
+  letter-spacing: -0.5px;
   color: #fff;
+  text-align: center;
 }
 
 /* カードコンテナ */
@@ -75,9 +89,14 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
-  padding: 24px;
+  padding: 28px 24px;
   box-shadow: var(--card-shadow);
+  transition: border-color 0.3s ease;
   margin-bottom: 20px;
+}
+
+.card:hover {
+  border-color: rgba(144, 224, 239, 0.3);
 }
 
 .card-title {
@@ -98,11 +117,12 @@ body {
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-bottom: 8px;
+  line-height: 1.4;
 }
 
 .textarea-field {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid var(--card-border);
   border-radius: 8px;
@@ -111,11 +131,13 @@ body {
   font-size: 0.9rem;
   outline: none;
   resize: vertical;
+  transition: all 0.2s ease;
 }
 
 .textarea-field:focus {
   border-color: var(--accent-cyan);
   box-shadow: 0 0 10px rgba(0, 180, 216, 0.3);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* パスワードマスク制御 */
@@ -128,7 +150,7 @@ body {
 
 /* カスタムチェックボックス */
 .control-row {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .checkbox-label {
@@ -136,12 +158,14 @@ body {
   align-items: center;
   cursor: pointer;
   font-size: 0.85rem;
+  user-select: none;
   position: relative;
 }
 
 .checkbox-label input[type="checkbox"] {
   position: absolute;
   opacity: 0;
+  cursor: pointer;
 }
 
 .custom-checkbox {
@@ -150,21 +174,34 @@ body {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--card-border);
   border-radius: 4px;
-  margin-right: 8px;
+  margin-right: 10px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.checkbox-label:hover input ~ .custom-checkbox {
+  border-color: var(--accent-cyan);
 }
 
 .checkbox-label input:checked ~ .custom-checkbox {
   background: var(--accent-cyan);
   border-color: var(--accent-cyan);
+  box-shadow: 0 0 8px rgba(0, 180, 216, 0.5);
 }
 
 .checkbox-label input:checked ~ .custom-checkbox::after {
   content: "✔";
   color: #fff;
-  font-size: 0.8rem;
+}
+
+.label-text {
+  color: var(--text-main);
 }
 
 /* ドラッグ＆ドロップエリア */
@@ -178,8 +215,9 @@ body {
   transition: all 0.2s ease;
 }
 
+.drop-console-area:hover,
 .drop-console-area.is-active {
-  background: rgba(0, 180, 216, 0.2);
+  background: rgba(0, 180, 216, 0.15);
   border-color: #fff;
 }
 
@@ -209,7 +247,7 @@ body {
   border: 1px dashed var(--accent-cyan);
   color: var(--accent-blue);
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: bold;
   word-break: break-all;
@@ -223,7 +261,7 @@ body {
 /* ログ表示エリア */
 .console-area {
   background: var(--console-bg);
-  border: 1px solid var(--card-border);
+  border: 1px solid rgba(144, 224, 239, 0.2);
   border-radius: 8px;
   padding: 12px;
   min-height: 80px;
@@ -233,15 +271,25 @@ body {
   color: #39ff14;
   word-break: break-all;
   white-space: pre-wrap;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.console-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.console-area::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: 3px;
 }
 
 /* ボタン */
 .btn {
   width: 100%;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px 16px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -252,6 +300,11 @@ body {
   background: rgba(0, 180, 216, 0.15);
   color: var(--accent-cyan);
   border: 1px solid var(--accent-cyan);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 180, 216, 0.3);
+  transform: translateY(-1px);
 }
 
 .btn-reset {
@@ -267,10 +320,6 @@ body {
   background: rgba(255, 77, 109, 0.3);
 }
 
-.btn:hover {
-  filter: brightness(1.15);
-}
-
 /* トースト通知 */
 .copy-notice {
   position: fixed;
@@ -280,9 +329,11 @@ body {
   background: rgba(3, 4, 94, 0.95);
   border: 1px solid var(--accent-cyan);
   color: var(--accent-cyan);
-  padding: 8px 18px;
+  padding: 10px 20px;
   border-radius: 20px;
   font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s ease;
@@ -306,14 +357,15 @@ body {
 
 /* ナビ＆フッター */
 .nav-footer {
+  margin-top: 12px;
   text-align: center;
-  margin-top: 10px;
 }
 
 .nav-link {
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.85rem;
+  transition: color 0.2s ease;
 }
 
 .nav-link:hover {
@@ -321,8 +373,9 @@ body {
 }
 
 footer {
-  margin-top: 30px;
+  margin-top: 40px;
   text-align: center;
   font-size: 0.75rem;
   color: var(--text-muted);
+  line-height: 1.6;
 }
